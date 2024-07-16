@@ -1,0 +1,87 @@
+@import url(reset.css);
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&display=swap');
+
+* {
+    --ff: 'DM Mono', monospace;
+    --col-bg: #1a1a1a;
+    --col-light: #ededed;
+    --col-grey: #7a7a7a;
+}
+
+body {
+    font-family: var(--ff);
+    background: var(--col-bg);
+    color: var(--col-light);
+    margin: 0; /* Reset body margin */
+    overflow-y: auto; /* Enable scrolling on the body */
+}
+
+.header-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    background: var(--col-bg);
+    z-index: 10;
+}
+
+
+
+header {
+    user-select: none;
+    -webkit-user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    color: var(--col-grey);
+    margin: 0;
+}
+
+header i {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.fa-copy {
+    transition: all 0.2s ease-in-out;
+}
+
+.fa-copy:hover {
+    color: var(--col-light);
+}
+
+::selection {
+    background: rgba(34, 111, 255, 0.4);
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    padding-top: 60px; /* Adjust based on header height */
+    box-sizing: border-box;
+}
+
+.editor-container {
+    width: 70%;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+textarea {
+    font-size: 1.2rem;
+    width: 100%;
+    min-height: calc(100vh - 120px); /* Ensure textarea takes full height minus header height */
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: var(--col-light);
+    resize: none;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    overflow: hidden; /* Hide textarea's internal scrollbar */
+
+}
