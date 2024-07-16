@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }, 700);
     }
 
+    window.electron.onCopyText(() => {
+        copyText()
+      });
+      
+
     // Adding click event listener to the icon element
     iconElement.addEventListener('click', copyText);
 });
+
+
