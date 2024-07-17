@@ -25,7 +25,9 @@ const saveText = async () => {
       focusedWindow.webContents.send('request-text-to-save', filePath);
     } else {
       // If filePath doesn't exist, trigger Save As or debug further
-      console.log('No valid filePath found.'); // Debugging line
+      console.log('No valid filepath found.'); // Debugging line
+      saveAs()
+      
     }
   }
 };
@@ -46,6 +48,7 @@ const saveAs = async () => {
       focusedWindow.webContents.send('request-text-to-save', result.filePath);
       focusedWindow.filePath = result.filePath; // Update filePath in window object
       console.log('Updated the file path:', focusedWindow.filePath); // Debugging line
+      focusedWindow.title = `focus - ${focusedWindow.filePath}`
     }
   }
 };
