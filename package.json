@@ -1,15 +1,41 @@
 {
-  "name": "typing",
+  "name": "focus",
   "version": "1.0.0",
-  "description": "",
+  "description": "Electron based text editor with no distractions",
+  "author": "Sam Alam",
   "main": "js/app.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "build": {
+    "appId": "co.samalam.focus",
+    "productName": "focus",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "app.js",
+      "index.html",
+      "css/**",
+      "js/**",
+      "assets/**"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  },
   "devDependencies": {
-    "electron": "^31.2.1"
+    "electron": "^13.6.9",
+    "electron-builder": "^22.14.13"
   }
 }
