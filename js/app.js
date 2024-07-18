@@ -1,17 +1,40 @@
-const { app, BrowserWindow, globalShortcut, ipcMain, dialog, Menu, document } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain, dialog, nativeImage, Menu, document, window } = require('electron');
+const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
+const { Titlebar } = require('custom-electron-titlebar/main');
 const fs = require('fs');
 const path = require('path');
 
-function createWindow() {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'), // Ensure you have a preload script
-    },
-  });
+setupTitlebar()
 
-  win.loadFile('index.html');
+function createWindow() {
+	// Create the browser window.
+	const win = new BrowserWindow({
+		width: 1000,
+		height: 600,
+    frame: false, // Use to linux
+		titleBarStyle: 'hidden',
+		titleBarOverlay: true,
+		webPreferences: {
+			sandbox: false,
+			preload: path.join(__dirname, 'preload.js')
+		}
+	})
+  
+	const menu = Menu.buildFromTemplate(exampleMenuTemplate)
+  Menu.setApplicationMenu(menu)
+	// and load the index.html of the app.
+	// mainWindow.loadFile('index.html')
+	win.loadFile('index.html');
+
+	// Open the DevTools.
+	// mainWindow.webContents.openDevTools()
+
+	// Attach listeners
+	attachTitlebarToWindow(win)
+
+  ipcMain.on('update-title', (event, title) => {
+		win.setTitle(title);
+	});
 }
 
 const saveText = async () => {
@@ -49,6 +72,7 @@ const saveAs = async () => {
       focusedWindow.filePath = result.filePath; // Update filePath in window object
       console.log('Updated the file path:', focusedWindow.filePath); // Debugging line
       focusedWindow.title = `focus - ${focusedWindow.filePath}`
+      win.setTitle(focusedWindow.title);
     }
   }
 };
@@ -84,47 +108,55 @@ const openText = async () => {
   }
 };
 
-const template = [
-  {
-    label: 'File',
-    submenu: [
-      {
-        label: 'Open',
+const exampleMenuTemplate = [
+	{
+		label: 'File',
+		submenu: [
+			{
+				label: 'Open',
         accelerator: 'CmdOrCtrl+O',
-        click: openText,
-      },
-      {
-        label: 'Save',
+        click: () => openText()
+			},
+			{
+				label: 'Save',
         accelerator: 'CmdOrCtrl+S',
-        click: saveText,
-      },
-      {
-        label: 'Save As',
+        click: () => saveText()
+			},
+			{
+				label: 'Save As',
         accelerator: 'CmdOrCtrl+Shift+S',
-        click: saveAs,
-      },
+        click: () => saveAs()
+			},
       {
-        role: 'quit'
-      }
-    ]
-  },
-  {
-    label: 'Edit',
-    submenu: [
-      {
-        label: 'Copy Text',
+				label: 'Quit',
+				click: () => app.quit()
+			},
+		]
+	},
+	{
+		label: 'Edit',
+		submenu: [
+			{
+				label: 'Copy Text',
         accelerator: 'CmdOrCtrl+Shift+C',
-        click: copyText,
-      }
-    ]
-  }
-];
+        click: () => copyText()
+			},
+		]
+	},
+	{
+		label: '&View',
+		submenu: [
+			{ role: 'reload' },
+			{ type: 'separator' },
+			{ role: 'zoomIn' },
+			{ role: 'zoomOut' },
+			{ role: 'resetZoom' },
+		]
+	}
+]
 
 
 app.whenReady().then(() => {
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
-
   globalShortcut.register('CmdOrCtrl+S', saveText);
   globalShortcut.register('CmdOrCtrl+Shift+S', saveAs);
   globalShortcut.register('CmdOrCtrl+Shift+C', copyText);
